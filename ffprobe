@@ -1,0 +1,36 @@
+#!/usr/bin/env nu
+# vim: filetype=nu :
+
+# Multimedia stream analyzer.
+export def main [
+  ...input_files: path
+] {
+  $input_files | each {
+    ^ffprobe -v quiet -print_format json -show_format -show_streams $in | from json
+  }
+}
+
+# Retrieve all the streams from a list of ffprobe outputs
+export def streams [] {
+  let streams = ($in | get streams);
+
+  match ($streams | describe) {
+    'list<list<any>>' => ($streams | flatten),
+    _ => $streams
+  }
+}
+
+# Retrieve all the video streams from a list of ffprobe outputs
+export def "streams video" [] {
+    $in | streams | where codec_type == "video"
+}
+
+# Retrieve all the audio streams from a list of ffprobe outputs
+export def "streams audio" [] {
+    $in | streams | where codec_type == "audio"
+}
+ 
+# Get the dimensions of a video stream
+export def "dimensions" [] {
+  $in | select width height
+}
