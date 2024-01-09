@@ -1,22 +1,22 @@
 #!/usr/bin/env -S nu --stdin
 
-def "parse filter" [
+export def "parse filter" [
 ] {
   $in | parse --regex '^(?<name>[^=]+)=(?<params>.*)' | first |
-  update params {|row| $row.params | parse --regex `(?<param>[^=]+)=(?<value>[^:]+):?` }
+  update params { parse --regex `(?<param>[^=]+)=(?<value>[^:]+):?` }
 }
 
-def "filter to-string" [] {
+export def "filter to-string" [] {
   each { |filter| $'($filter.name)=($filter.params | format '{param}={value}')' } |
-  str join ':' 
+  str join ':'
 }
 
-def "complex-filters to-string" [
+export def "complex-filters to-string" [
   --pretty-print (-p)
 ]: table<input: list<string>, filters: table<name: string, params: table<param: string, value: string>>, output: string> -> string {
     $in | update filters {
-      |$row| $row.filters | flatten | filter to-string
-    } | update input { |row|
-      $row.input | str join ']['
+      flatten | filter to-string
+    } | update input {
+      str join ']['
     } | format '[{input}]{filters}[{output}]' | str join (";" + (if $pretty_print { "\n"  } else { "" })) | str replace --all '[]' ''
 }

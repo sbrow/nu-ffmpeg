@@ -1,5 +1,5 @@
 {
-  description = "A very basic flake";
+  description = "Utility commands for working with video files in nushell";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
