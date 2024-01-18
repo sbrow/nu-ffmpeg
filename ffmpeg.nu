@@ -24,18 +24,16 @@ export def "cmd to-args" []: record -> list<string> {
 export def "cmd filters append" [
   complex_filter: list<record>
 ]: record -> record {
-  let cmd = $in;
+  update filters { |cmd|
+    let filters = $in;
 
-  if ($cmd.options.chain_filters) {
-    $cmd | update filters {
-      let original = $in;
-
-      ($original | range 0..-2) | append [
-        (($original | default [] | last) | append $complex_filter)
-      ]
+    if ($cmd.options.chain_filters) {
+      (($filters | range 0..-2) | append [
+        (($filters | default [] | last) | append $complex_filter)
+      ])
+    } else {
+      $filters | append [$complex_filter]
     }
-  } else {
-    $cmd | update filters { append [$complex_filter] }
   }
 }
 
