@@ -3,7 +3,7 @@
 
 # Multimedia stream analyzer.
 export def main [
-  ...input_files: path
+  ...input_files: string
 ]: nothing -> table {
   $input_files | each {
     ^ffprobe -v quiet -print_format json -show_format -show_streams $in | from json
