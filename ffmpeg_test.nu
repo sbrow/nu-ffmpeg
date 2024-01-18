@@ -132,13 +132,13 @@ def without_filterchain_chains_are_concated [] {
 }
 #[test]
 def filterchain_concats_filters [] {
-    let got = (cmd ['INPUT'] ['OUTPUT'] | filterchain ['in'] ['out'] { fps 25 | loop 2 1 });
+    let got = (cmd ['INPUT'] ['OUTPUT'] | filterchain { fps 25 -i ['in'] | loop 2 1 -o ['out']});
 
     assert equal $got {
         input: ['INPUT']
         filters: [[
               {
-                input: [] # ['in']
+                input: ['in']
                 name: 'fps'
                 params: [
                   {param: 'fps' value: 25}
@@ -160,7 +160,7 @@ def filterchain_concats_filters [] {
                   {param: 'loop' value: 2}
                   {param: 'size' value: 1}
                 ]
-                output: [] # ['out']
+                output: ['out']
               }
             ]]
         output: ['OUTPUT']
