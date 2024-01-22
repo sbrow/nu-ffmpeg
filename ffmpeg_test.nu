@@ -91,6 +91,14 @@ def can_convert_filtergraph_to_string [] {
 }
 
 #[test]
+def boolean_params_are_converted_to_1_or_0 [] {
+  let got = (cmd ['INPUT'] ['OUTPUT'] | crop -k | run -d | get 4);
+  let want = 'crop=w=iw:x=0:y=0:keep_aspect=1:exact=0';
+
+  assert equal $got $want;
+}
+
+#[test]
 def without_filterchain_chains_are_concated [] {
     let got = (cmd ['INPUT'] ['OUTPUT'] | fps 25 | loop 2 1);
 
@@ -102,18 +110,18 @@ def without_filterchain_chains_are_concated [] {
               input: []
               name: 'fps'
               params: [
-                {param: 'fps' value: 25}
+                {param: 'fps' value: '25'}
               ]
               output: []
             }
-            {
-              input: []
-              name: 'settb'
-              params: [
-                {param: 'expr' value: '1/25'}
-              ]
-              output: []
-            }
+            #{
+            #  input: []
+            #  name: 'settb'
+            #  params: [
+            #    {param: 'expr' value: '1/25'}
+            #  ]
+            #  output: []
+            #}
           ]
           [{
             input: []
@@ -141,18 +149,18 @@ def filterchain_concats_filters [] {
                 input: ['in']
                 name: 'fps'
                 params: [
-                  {param: 'fps' value: 25}
+                  {param: 'fps' value: '25'}
                 ]
                 output: []
               }
-              {
-                input: []
-                name: 'settb'
-                params: [
-                  {param: 'expr' value: '1/25'}
-                ]
-                output: []
-              }
+              #{
+              #  input: []
+              #  name: 'settb'
+              #  params: [
+              #    {param: 'expr' value: '1/25'}
+              #  ]
+              #  output: []
+              #}
               {
                 input: []
                 name: 'loop'

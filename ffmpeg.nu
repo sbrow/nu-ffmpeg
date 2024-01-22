@@ -21,6 +21,18 @@ export def "cmd to-args" []: record -> list<string> {
   ]
 }
 
+# Run the given command
+# Serves as a sink for a filter pipeline.
+export def "run" [
+  --dry-run (-d) # Print the command that would be run
+] {
+  if $dry_run {
+      [ffmpeg, ...($in | cmd to-args)]
+  } else {
+    ffmpeg ...($in | cmd to-args)
+  }
+}
+
 export def "cmd filters append" [
   complex_filter: list<record>
 ]: record -> record {
@@ -70,8 +82,11 @@ def "filter to-string" []: record<input: list<string> name: string params: table
   } | update output {
     str join ']['
   } | update params {
-    each { format '{param}={value}' } | str join ':' | str replace -ar '(?<=^|:)=' ''
-  } | format '[{input}]{name}={params}[{output}]' | str replace -ar '\[\]|=(?=[\[,;])' ''
+    each { update value { match ($in | describe) {
+        'bool' => (if ($in) { '1' } else { '0' })
+        _ => $in,
+      } } | format pattern '{param}={value}' } | str join ':' | str replace -ar '(?<=^|:)=' ''
+  } | format pattern '[{input}]{name}={params}[{output}]' | str replace -ar '\[\]|=(?=[\[,;])' ''
 }
 
 # Set the input and outputs of a filter chain
