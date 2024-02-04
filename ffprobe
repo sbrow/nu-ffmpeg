@@ -1,7 +1,7 @@
 #!/usr/bin/env nu
 # vim: filetype=nu :
 
-# Multimedia stream analyzer.
+# Run ffprobe on a list of files and return the output as a table.
 export def main [
   ...input_files: string
 ]: nothing -> table {

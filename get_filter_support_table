@@ -1,0 +1,13 @@
+#!/usr/bin/env -S nu -n
+# vim: filetype=nu :
+
+use filters.nu;
+
+def main [] {
+  (
+    help commands
+    | where command_type == "custom" and name !~ "p(rompt|wd)|^main$"
+    | select name usage
+    | to md -p
+  )
+}

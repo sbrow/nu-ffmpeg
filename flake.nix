@@ -13,8 +13,7 @@
       devShells.x86_64-linux.default = pkgs.mkShell {
         packages = with pkgs; [
           ffmpeg
-
-          sbcl
+          gomplate
 
           nushellFull
         ];

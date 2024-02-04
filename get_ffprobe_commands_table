@@ -1,0 +1,15 @@
+#!/usr/bin/env -S nu -n
+# vim: filetype=nu :
+
+use ffprobe;
+
+def main [] {
+  (
+    help commands
+    | where command_type == "custom" and name !~ "p(rompt|wd)"
+    | select name usage
+    | update name { if $in == 'main' { 'ffprobe' } else { $'ffprobe ($in)' } }
+    | filter { not ($in.name == 'ffprobe' and ($in.usage | is-empty)) }
+    | to md -p
+  )
+}
