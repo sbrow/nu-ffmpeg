@@ -176,3 +176,54 @@ def filterchain_concats_filters [] {
         options: { chain_filters: false }
       };
 }
+
+#[test]
+def filterchain_appends_current_filter [] {
+    let got = (cmd ['INPUT'] ['OUTPUT'] | fps 12 | filterchain { fps 25 -i ['in'] | loop 2 1 -o ['out']});
+
+    assert equal $got {
+        input: ['INPUT']
+        filters: [
+          [
+            {
+              input: []
+              name: 'fps'
+              params: [
+                {param: 'fps' value: '12'}
+              ]
+              output: []
+            }
+          ]
+          [
+            {
+              input: ['in']
+              name: 'fps'
+              params: [
+                {param: 'fps' value: '25'}
+              ]
+              output: []
+            }
+            #{
+            #  input: []
+            #  name: 'settb'
+            #  params: [
+            #    {param: 'expr' value: '1/25'}
+            #  ]
+            #  output: []
+            #}
+            {
+              input: []
+              name: 'loop'
+              params: [
+                {param: 'loop' value: 2}
+                {param: 'size' value: 1}
+              ]
+              output: ['out']
+            }
+          ]
+        ]
+        output: ['OUTPUT']
+        args: []
+        options: { chain_filters: false }
+      };
+}

@@ -33,18 +33,24 @@ export def "run" [
   }
 }
 
+def "append last" [
+  items: list
+]: list -> list {
+  let list = $in;
+
+  ($list | range 0..-2) | append [($list | default [] | last | append $items)]
+}
+
 export def "cmd filters append" [
-  complex_filter: list<record>
+  complex_filters: list<record>
 ]: record -> record {
   update filters { |cmd|
     let filters = $in;
 
     if ($cmd.options.chain_filters) {
-      (($filters | range 0..-2) | append [
-        (($filters | default [] | last) | append $complex_filter)
-      ])
+      $filters | append last $complex_filters
     } else {
-      $filters | append [$complex_filter]
+      $filters | append [$complex_filters]
     }
   }
 }
@@ -99,7 +105,21 @@ export def filterchain [
   let original_option = $cmd.options.chain_filters;
 
   # TODO: Assign inputs and outputs
-  $cmd | update options.chain_filters { not $in } | do $filter | update options.chain_filters $original_option;
+  (
+    $cmd
+    | update options.chain_filters { not $in }
+    | update filters {
+      let it = $in;
+
+      if ($it | describe | str starts-with 'table') {
+        [$it [] ]
+      } else {
+        $it | append [[]]
+      }
+    }
+    | do $filter
+    | update options.chain_filters $original_option
+  );
 }
 
 # Build a record representaion of a complex filter
