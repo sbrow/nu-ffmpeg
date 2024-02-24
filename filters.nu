@@ -29,8 +29,7 @@ export def fps [
   --output (-o): list<string>: = []
  --start-time (-s) # Assume the first PTS should be the given value, in seconds.
 # This allows for padding/trimming at the start of stream. By default, no assumption is made about the first frame’s expected PTS, so no padding or trimming is done. For example, this could be set to 0 to pad the beginning with duplicates of the first frame if a video stream starts after the audio stream or to trim any frames with a negative PTS.
-  --round (-r): string # Timestamp (PTS) rounding method.
-# Possible values are: "zero", "inf", "down", "up", "near".
+  --round (-r): string@fps-round-options # Timestamp (PTS) rounding method. use completion to view available options.
   --eof-action (-e): string # Action performed when reading the last frame. Possible values are: "round", "pass"
   fps: string = '25' # The desired output frame rate. It accepts expressions containing the following constants:
 # "source_fps": The input’s frame rate
@@ -44,6 +43,15 @@ export def fps [
   ]
 }
 
+def fps-round-options [] {
+  [
+    'zero'
+    'inf'
+    'down'
+    'up'
+    'near'
+  ]
+}
 export def split [
   --input (-i): list<string>: = []
   output: list<string>

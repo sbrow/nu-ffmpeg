@@ -9,6 +9,7 @@ Utility commands for working with ffmpeg in nushell.
 - `ffprobe` multiple files at once
 - Use `streams`, `streams video`, and `streams audio` to filter `ffprobe` output
 - get the `dimensions` of a video stream as a record
+- Tab-completion for filter options. i.e. `fps --round<tab>` will yield `zero inf down up near`
 - Apply and parse complex filters to a video (Work In Progress)
 
 ## Setup
