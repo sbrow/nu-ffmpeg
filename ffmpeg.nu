@@ -102,7 +102,6 @@ export def filterchain [
   let cmd = $in;
   let original_option = $cmd.options.chain_filters;
 
-  # TODO: Assign inputs and outputs
   (
     $cmd
     | update options.chain_filters { not $in }
