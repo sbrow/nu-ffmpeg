@@ -93,11 +93,11 @@ def "filter to-string" []: record<input: list<string> name: string params: table
   } | format pattern '[{input}]{name}={params}[{output}]' | str replace -ar '\[\]|=(?=[\[,;])' ''
 }
 
-# Set the input and outputs of a filter chain
+# Add a chain of filters to the command's filtergraph
 export def filterchain [
-  --input (-i): list<string>
-  --output (-o): list<string>
-  filter: closure
+  --input (-i): list<string> # sets the input of the last filterchain's first filter
+  --output (-o): list<string> # sets the output of the last filterchain's last filter
+  filter: closure # The filter, or filters to append to the filtergraph
 ] {
   let cmd = $in;
   let original_option = $cmd.options.chain_filters;
