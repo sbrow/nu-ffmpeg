@@ -227,3 +227,35 @@ def filterchain_appends_current_filter [] {
         options: { chain_filters: false }
       };
 }
+
+#[test]
+def filterchains_can_set_inputs_and_outputs [] {
+  let got = (cmd ['INPUT'] ['OUTPUT'] | filterchain -i ['in'] -o ['out'] { fps 25 | settb '1/25' });
+
+  assert equal $got {
+    input: ['INPUT']
+    filters: [
+      [
+        {
+          input: ['in']
+          name: 'fps'
+          params: [
+            {param: 'fps' value: '25'}
+          ]
+          output: []
+        }
+        {
+          input: []
+          name: 'settb'
+          params: [
+            {param: 'expr' value: '1/25'}
+          ]
+          output: ['out']
+        }
+      ]
+    ]
+    output: ['OUTPUT']
+    args: []
+    options: { chain_filters: false }
+    }
+  }

@@ -36,9 +36,7 @@ export def "run" [
 def "append last" [
   items: list
 ]: list -> list {
-  let list = $in;
-
-  ($list | range 0..-2) | append [($list | default [] | last | append $items)]
+  update (($in | length) - 1) { $in | append $items }
 }
 
 export def "cmd filters append" [
@@ -97,8 +95,8 @@ def "filter to-string" []: record<input: list<string> name: string params: table
 
 # Set the input and outputs of a filter chain
 export def filterchain [
-  #input: list<string>
-  #output: list<string>
+  --input (-i): list<string>
+  --output (-o): list<string>
   filter: closure
 ] {
   let cmd = $in;
@@ -118,6 +116,22 @@ export def filterchain [
       }
     }
     | do $filter
+    | if ($input | is-empty | not $in) {
+      update filters {
+        update (($in | length) - 1) {
+          update 0.input $input
+        }
+      }
+    } else { $in }
+    | if ($output | is-empty | not $in) {
+      update filters {
+        update (($in | length) - 1) {
+          update (($in | length) - 1) {
+            update output $output
+          }
+        }
+      }
+    } else { $in }
     | update options.chain_filters $original_option
   );
 }
