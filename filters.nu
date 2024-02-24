@@ -52,6 +52,124 @@ def fps-round-options [] {
     'near'
   ]
 }
+
+# Set the timebase to use for the output frames timestamps. It is mainly useful for testing timebase configuration.
+export def settb [
+  --input (-i): list<string>: = []
+  --output (-o): list<string>: = []
+  timebase # The value for tb is an arithmetic expression representing a rational. The expression can contain the constants "AVTB" (the default timebase), "intb" (the input timebase) and "sr" (the sample rate, audio only). Default value is "intb".
+  ] {
+  cmd filters append [
+    (complex-filter settb {expr: $timebase} -i $input -o $output)
+  ]
+}
+
+# TODO: Refactor "list to-pipe-separated-string"
+def "list to-pipe-separated-string" []: list -> string {
+  let list = $in;
+
+  if ($list | length) > 0 {
+    $list | str join '|'
+  }
+}
+
+# Convert the input video to one of the specified pixel formats. Libavfilter will try to pick one that is suitable as input to the next filter.
+export def format [
+  --input (-i): list<string>: = []
+  --output (-o): list<string>: = []
+  --pix-fmts (-p): list<string> # A list of pixel format names
+  --color-spaces (-c): list<string> # A list of color space names
+  --color-ranges (-r): list<string> # A list of color range names
+  ] {
+  cmd filters append [
+    (complex-filter format {
+      pix_fmts: ($pix_fmts | list to-pipe-separated-string)
+      color_spaces: ($color_spaces | list to-pipe-separated-string)
+      color_ranges: ($color_ranges | list to-pipe-separated-string)
+    } -i $input -o $output)
+  ]
+}
+
+# Apply cross fade from one input video stream to another input video stream. The cross fade is applied for specified duration.
+# Both inputs must be constant frame-rate and have the same resolution, pixel format, frame rate and timebase.
+export def xfade [
+  --input (-i): list<string> = []
+  --output (-o): list<string> = []
+  --transition (-t): string@xfade-transitions = fade # Set one of available transition effects (activate completion to view)
+  --duration (-d): float = 1.0 # Set cross fade duration in seconds. Range is 0 to 60 seconds. Default duration is 1 second.
+  --offset (-O): float = 0.0 # Set cross fade start relative to first input stream in seconds. Default offset is 0.
+  --expr (-e): string
+] {
+  cmd filters append [
+    (complex-filter xfade -i $input -o $output { transition: $transition duration: $duration offset: $offset expr: $expr })
+  ]
+}
+
+# List of available transition effects
+def xfade-transitions [] {
+  [
+    'custom'
+    'fade'
+    'wipeleft'
+    'wiperight'
+    'wipeup'
+    'wipedown'
+    'slideleft'
+    'slideright'
+    'slideup'
+    'slidedown'
+    'circlecrop'
+    'rectcrop'
+    'distance'
+    'fadeblack'
+    'fadewhite'
+    'radial'
+    'smoothleft'
+    'smoothright'
+    'smoothup'
+    'smoothdown'
+    'circleopen'
+    'circleclose'
+    'vertopen'
+    'vertclose'
+    'horzopen'
+    'horzclose'
+    'dissolve'
+    'pixelize'
+    'diagtl'
+    'diagtr'
+    'diagbl'
+    'diagbr'
+    'hlslice'
+    'hrslice'
+    'vuslice'
+    'vdslice'
+    'hblur'
+    'fadegrays'
+    'wipetl'
+    'wipetr'
+    'wipebl'
+    'wipebr'
+    'squeezeh'
+    'squeezev'
+    'zoomin'
+    'fadefast'
+    'fadeslow'
+    'hlwind'
+    'hrwind'
+    'vuwind'
+    'vdwind'
+    'coverleft'
+    'coverright'
+    'coverup'
+    'coverdown'
+    'revealleft'
+    'revealright'
+    'revealup'
+    'revealdown'
+  ]
+}
+
 export def split [
   --input (-i): list<string>: = []
   output: list<string>

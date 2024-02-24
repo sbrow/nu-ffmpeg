@@ -67,8 +67,8 @@ export def "parse filter" [
 ]: string -> table<name: string params: table<param: string, value: string>> {
   parse --regex '^\s*(?:\[(?<input>[^\s]+)\]\s*)?(?<name>[^=\s\[]+)\s*(?:=(?<params>[^\[\s,;]*)\s*)?(?:\[(?<output>[^\s,;]+)\])?' | first | update params {
     parse --regex `(?:(?<param>[^=]+)=)?(?<value>[^:]+):?`
-  } | update input { split row '][' | filter { not ($in | is-empty) }
-  } | update output { split row '][' | filter { not ($in | is-empty) } }
+  } | update input { split row '][' | filter { is-not-empty }
+  } | update output { split row '][' | filter { is-not-empty } }
 }
 
 # TODO: Remove export
@@ -115,14 +115,14 @@ export def filterchain [
       }
     }
     | do $filter
-    | if ($input | is-empty | not $in) {
+    | if ($input | is-not-empty) {
       update filters {
         update (($in | length) - 1) {
           update 0.input $input
         }
       }
     } else { $in }
-    | if ($output | is-empty | not $in) {
+    | if ($output | is-not-empty) {
       update filters {
         update (($in | length) - 1) {
           update (($in | length) - 1) {
@@ -148,4 +148,20 @@ export def complex-filter [
     params: ($params | transpose param value | compact param value)
     output: $output
   }
+}
+
+# Appends a single complex-filter to the end of the command's filtergraph
+export def append-complex-filter [
+  --input (-i): list<string> = []
+  --output (-o): list<string> = []
+  name: string
+  params: record = {}
+] {
+  $in | cmd filters append [
+    (complex-filter --input $input --output $output $name $params)
+  ]
+}
+
+def is-not-empty []: any -> bool {
+  is-empty | not $in
 }
