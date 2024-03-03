@@ -8,32 +8,12 @@ vim: filetype=markdown :
 
 Utility commands for working with ffmpeg in nushell.
 
-## Capabilities
+## Capabilities ([see examples](#examples))
 
 - Return tables from `ffprobe`
-
-```nu
-{{ ffprobe_example }}
-```
-
 - `ffprobe` multiple files at once
-
-```nu
-{{ ffprobe_multiple_files_example }}
-```
-
 - Use `streams`, `streams video`, and `streams audio` to filter `ffprobe` output
-
-```nu
-{{ ffprobe_streams_video_example }}
-{{ ffprobe_streams_audio_example }}
-```
-
 - get the `dimensions` of a video stream as a record
-
-```nu
-{{ ffprobe_dimensions_example }}
-```
 - Tab-completion for filter options. i.e. `fps --round<tab>` will yield `zero inf down up near`
 - Apply and parse complex filters to a video (Work In Progress)
 
@@ -60,6 +40,25 @@ use <path-to-repository>/filters *
 
 ## FFMpeg
 
-## Supported Filters
+### Supported Filters
 
 {{ filters }}
+
+## Examples
+
+```nu
+{{ ffprobe_example -}}
+```
+
+```nu
+{{ ffprobe_multiple_files_example -}}
+```
+
+```nu
+{{ ffprobe_streams_video_example -}}
+{{ ffprobe_streams_audio_example -}}
+```
+
+```nu
+{{ ffprobe_dimensions_example -}}
+```

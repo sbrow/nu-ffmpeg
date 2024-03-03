@@ -3,76 +3,12 @@
 
 Utility commands for working with ffmpeg in nushell.
 
-## Capabilities
+## Capabilities ([see examples](#examples))
 
 - Return tables from `ffprobe`
-
-```nu
-> ffprobe https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4
-╭────┬──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┬─────╮
-│  # │                                                           streams                                                            │ ... │
-├────┼──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┼─────┤
-│  0 │ ╭───┬────────────┬───────────────────────────────────────────┬─────────┬────────────┬──────────────────┬────────────┬─────╮  │ ... │
-│    │ │ # │ codec_name │              codec_long_name              │ profile │ codec_type │ codec_tag_string │ codec_tag  │ ... │  │     │
-│    │ ├───┼────────────┼───────────────────────────────────────────┼─────────┼────────────┼──────────────────┼────────────┼─────┤  │     │
-│    │ │ 0 │ h264       │ H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10 │ Main    │ video      │ avc1             │ 0x31637661 │ ... │  │     │
-│    │ │ 1 │ aac        │ AAC (Advanced Audio Coding)               │ LC      │ audio      │ mp4a             │ 0x6134706d │ ... │  │     │
-│    │ ╰───┴────────────┴───────────────────────────────────────────┴─────────┴────────────┴──────────────────┴────────────┴─────╯  │     │
-╰────┴──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┴─────╯
-
-```
-
 - `ffprobe` multiple files at once
-```nu
-> ffprobe https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4 https://sample-videos.com/video321/mkv/720/big_buck_bunny_720p_1mb.mkv
-╭────┬──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┬─────╮
-│  # │                                                           streams                                                            │ ... │
-├────┼──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┼─────┤
-│  0 │ ╭───┬────────────┬───────────────────────────────────────────┬─────────┬────────────┬──────────────────┬────────────┬─────╮  │ ... │
-│    │ │ # │ codec_name │              codec_long_name              │ profile │ codec_type │ codec_tag_string │ codec_tag  │ ... │  │     │
-│    │ ├───┼────────────┼───────────────────────────────────────────┼─────────┼────────────┼──────────────────┼────────────┼─────┤  │     │
-│    │ │ 0 │ h264       │ H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10 │ Main    │ video      │ avc1             │ 0x31637661 │ ... │  │     │
-│    │ │ 1 │ aac        │ AAC (Advanced Audio Coding)               │ LC      │ audio      │ mp4a             │ 0x6134706d │ ... │  │     │
-│    │ ╰───┴────────────┴───────────────────────────────────────────┴─────────┴────────────┴──────────────────┴────────────┴─────╯  │     │
-│  1 │ ╭───┬────────────┬─────────────────────────────┬────────────────┬────────────┬──────────────────┬───────────┬───────┬─────╮  │ ... │
-│    │ │ # │ codec_name │       codec_long_name       │    profile     │ codec_type │ codec_tag_string │ codec_tag │ width │ ... │  │     │
-│    │ ├───┼────────────┼─────────────────────────────┼────────────────┼────────────┼──────────────────┼───────────┼───────┼─────┤  │     │
-│    │ │ 0 │ mpeg4      │ MPEG-4 part 2               │ Simple Profile │ video      │ [0][0][0][0]     │ 0x0000    │  1280 │ ... │  │     │
-│    │ │ 1 │ aac        │ AAC (Advanced Audio Coding) │ LC             │ audio      │ [0][0][0][0]     │ 0x0000    │  ❎   │ ... │  │     │
-│    │ ╰───┴────────────┴─────────────────────────────┴────────────────┴────────────┴──────────────────┴───────────┴───────┴─────╯  │     │
-╰────┴──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┴─────╯
-
-```
-
 - Use `streams`, `streams video`, and `streams audio` to filter `ffprobe` output
-
-```nu
-> ffprobe https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4 | streams video
-╭────┬─────────────┬────────────────────────────────────────────┬──────────┬─────────────┬───────────────────┬─────────────┬────────┬─────╮
-│  # │ codec_name  │              codec_long_name               │ profile  │ codec_type  │ codec_tag_string  │  codec_tag  │ width  │ ... │
-├────┼─────────────┼────────────────────────────────────────────┼──────────┼─────────────┼───────────────────┼─────────────┼────────┼─────┤
-│  0 │ h264        │ H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10  │ Main     │ video       │ avc1              │ 0x31637661  │   1280 │ ... │
-╰────┴─────────────┴────────────────────────────────────────────┴──────────┴─────────────┴───────────────────┴─────────────┴────────┴─────╯
-
-> ffprobe https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4 | streams audio
-╭────┬─────────────┬──────────────────────────────┬─────────┬────────────┬──────────────────┬────────────┬────────────┬─────────────┬─────╮
-│  # │ codec_name  │       codec_long_name        │ profile │ codec_type │ codec_tag_string │ codec_tag  │ sample_fmt │ sample_rate │ ... │
-├────┼─────────────┼──────────────────────────────┼─────────┼────────────┼──────────────────┼────────────┼────────────┼─────────────┼─────┤
-│  1 │ aac         │ AAC (Advanced Audio Coding)  │ LC      │ audio      │ mp4a             │ 0x6134706d │ fltp       │ 48000       │ ... │
-╰────┴─────────────┴──────────────────────────────┴─────────┴────────────┴──────────────────┴────────────┴────────────┴─────────────┴─────╯
-
-```
-
 - get the `dimensions` of a video stream as a record
-
-```nu
-> ffprobe https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4 | streams video | first | dimensions
-╭────────┬──────╮
-│ width  │ 1280 │
-│ height │ 720  │
-╰────────┴──────╯
-
-```
 - Tab-completion for filter options. i.e. `fps --round<tab>` will yield `zero inf down up near`
 - Apply and parse complex filters to a video (Work In Progress)
 
@@ -107,14 +43,82 @@ use <path-to-repository>/filters *
 
 ## FFMpeg
 
-## Supported Filters
+### Supported Filters
 
-| name    | usage                                                                                              |
-| ------- | -------------------------------------------------------------------------------------------------- |
-| crop    | Crop the input video to given dimensions.                                                          |
-| fps     | Convert the video to specified constant frame rate by duplicating or dropping frames as necessary. |
-| loop    | loop video frames                                                                                  |
-| overlay | Overlay one video on top of another.                                                               |
-| split   |                                                                                                    |
-| vflip   | Flip the input video vertically.                                                                   |
+| name    | usage                                                                                                                                                                                                                                      |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| crop    | Crop the input video to given dimensions.                                                                                                                                                                                                  |
+| format  | Convert the input video to one of the specified pixel formats. Libavfilter will try to pick one that is suitable as input to the next filter.                                                                                              |
+| fps     | Convert the video to specified constant frame rate by duplicating or dropping frames as necessary.                                                                                                                                         |
+| loop    | loop video frames                                                                                                                                                                                                                          |
+| overlay | Overlay one video on top of another.                                                                                                                                                                                                       |
+| settb   | Set the timebase to use for the output frames timestamps. It is mainly useful for testing timebase configuration.                                                                                                                          |
+| split   |                                                                                                                                                                                                                                            |
+| vflip   | Flip the input video vertically.                                                                                                                                                                                                           |
+| xfade   | Apply cross fade from one input video stream to another input video stream. The cross fade is applied for specified duration.
+Both inputs must be constant frame-rate and have the same resolution, pixel format, frame rate and timebase. |
 
+
+## Examples
+
+```nu
+# Return a table from ffprobe
+> ffprobe https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4
+╭────┬──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┬─────╮
+│  # │                                                           streams                                                            │ ... │
+├────┼──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┼─────┤
+│  0 │ ╭───┬────────────┬───────────────────────────────────────────┬─────────┬────────────┬──────────────────┬────────────┬─────╮  │ ... │
+│    │ │ # │ codec_name │              codec_long_name              │ profile │ codec_type │ codec_tag_string │ codec_tag  │ ... │  │     │
+│    │ ├───┼────────────┼───────────────────────────────────────────┼─────────┼────────────┼──────────────────┼────────────┼─────┤  │     │
+│    │ │ 0 │ h264       │ H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10 │ Main    │ video      │ avc1             │ 0x31637661 │ ... │  │     │
+│    │ │ 1 │ aac        │ AAC (Advanced Audio Coding)               │ LC      │ audio      │ mp4a             │ 0x6134706d │ ... │  │     │
+│    │ ╰───┴────────────┴───────────────────────────────────────────┴─────────┴────────────┴──────────────────┴────────────┴─────╯  │     │
+╰────┴──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┴─────╯
+```
+
+```nu
+# Use ffprobe on mutliple files at once
+> ffprobe https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4 https://sample-videos.com/video321/mkv/720/big_buck_bunny_720p_1mb.mkv
+╭────┬──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┬─────╮
+│  # │                                                           streams                                                            │ ... │
+├────┼──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┼─────┤
+│  0 │ ╭───┬────────────┬───────────────────────────────────────────┬─────────┬────────────┬──────────────────┬────────────┬─────╮  │ ... │
+│    │ │ # │ codec_name │              codec_long_name              │ profile │ codec_type │ codec_tag_string │ codec_tag  │ ... │  │     │
+│    │ ├───┼────────────┼───────────────────────────────────────────┼─────────┼────────────┼──────────────────┼────────────┼─────┤  │     │
+│    │ │ 0 │ h264       │ H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10 │ Main    │ video      │ avc1             │ 0x31637661 │ ... │  │     │
+│    │ │ 1 │ aac        │ AAC (Advanced Audio Coding)               │ LC      │ audio      │ mp4a             │ 0x6134706d │ ... │  │     │
+│    │ ╰───┴────────────┴───────────────────────────────────────────┴─────────┴────────────┴──────────────────┴────────────┴─────╯  │     │
+│  1 │ ╭───┬────────────┬─────────────────────────────┬────────────────┬────────────┬──────────────────┬───────────┬───────┬─────╮  │ ... │
+│    │ │ # │ codec_name │       codec_long_name       │    profile     │ codec_type │ codec_tag_string │ codec_tag │ width │ ... │  │     │
+│    │ ├───┼────────────┼─────────────────────────────┼────────────────┼────────────┼──────────────────┼───────────┼───────┼─────┤  │     │
+│    │ │ 0 │ mpeg4      │ MPEG-4 part 2               │ Simple Profile │ video      │ [0][0][0][0]     │ 0x0000    │  1280 │ ... │  │     │
+│    │ │ 1 │ aac        │ AAC (Advanced Audio Coding) │ LC             │ audio      │ [0][0][0][0]     │ 0x0000    │  ❎   │ ... │  │     │
+│    │ ╰───┴────────────┴─────────────────────────────┴────────────────┴────────────┴──────────────────┴───────────┴───────┴─────╯  │     │
+╰────┴──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┴─────╯
+```
+
+```nu
+# Extract the video streams from a video
+> ffprobe https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4 | streams video
+╭────┬─────────────┬────────────────────────────────────────────┬──────────┬─────────────┬───────────────────┬─────────────┬────────┬─────╮
+│  # │ codec_name  │              codec_long_name               │ profile  │ codec_type  │ codec_tag_string  │  codec_tag  │ width  │ ... │
+├────┼─────────────┼────────────────────────────────────────────┼──────────┼─────────────┼───────────────────┼─────────────┼────────┼─────┤
+│  0 │ h264        │ H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10  │ Main     │ video       │ avc1              │ 0x31637661  │   1280 │ ... │
+╰────┴─────────────┴────────────────────────────────────────────┴──────────┴─────────────┴───────────────────┴─────────────┴────────┴─────╯
+# Extract the audio streams from a video
+> ffprobe https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4 | streams audio
+╭────┬─────────────┬──────────────────────────────┬─────────┬────────────┬──────────────────┬────────────┬────────────┬─────────────┬─────╮
+│  # │ codec_name  │       codec_long_name        │ profile │ codec_type │ codec_tag_string │ codec_tag  │ sample_fmt │ sample_rate │ ... │
+├────┼─────────────┼──────────────────────────────┼─────────┼────────────┼──────────────────┼────────────┼────────────┼─────────────┼─────┤
+│  1 │ aac         │ AAC (Advanced Audio Coding)  │ LC      │ audio      │ mp4a             │ 0x6134706d │ fltp       │ 48000       │ ... │
+╰────┴─────────────┴──────────────────────────────┴─────────┴────────────┴──────────────────┴────────────┴────────────┴─────────────┴─────╯
+```
+
+```nu
+# Extract the dimensions of a video stream
+> ffprobe https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4 | streams video | first | dimensions
+╭────────┬──────╮
+│ width  │ 1280 │
+│ height │ 720  │
+╰────────┴──────╯
+```
