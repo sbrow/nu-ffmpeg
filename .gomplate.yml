@@ -7,5 +7,9 @@ plugins:
   ffprobe: ./get_ffprobe_commands_table
   version: ./nu_version
   ffprobe_example: ./examples/ffprobe.nu
-pluginTimeout: 10s
+  ffprobe_multiple_files_example: ./examples/ffprobe-multiple-files.nu
+  ffprobe_streams_audio_example: ./examples/streams-audio.nu
+  ffprobe_streams_video_example: ./examples/streams-video.nu
+  ffprobe_dimensions_example: ./examples/dimensions.nu
+#pluginTimeout: 10s
 
