@@ -1,0 +1,11 @@
+inputFiles:
+  - README.md.tmpl
+outputFiles:
+  - README.md
+plugins:
+  filters: ./get_filter_support_table
+  ffprobe: ./get_ffprobe_commands_table
+  version: ./nu_version
+  ffprobe_example: ./examples/ffprobe.nu
+pluginTimeout: 10s
+
