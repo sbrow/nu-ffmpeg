@@ -1,0 +1,6 @@
+#!/usr/bin/env nu
+# vim: filetype=nu :
+
+def main [name: string] {
+  nu $'./examples/($name).nu'
+}
