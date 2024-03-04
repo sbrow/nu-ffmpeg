@@ -5,7 +5,8 @@ outputFiles:
 plugins:
   filters: ./get_filter_support_table
   ffprobe: ./get_ffprobe_commands_table
-  version: ./nu_version
+  nu_version:
+    cmd: ./bin/nu-version
   example:
     cmd: ./bin/run-example
     #args: []

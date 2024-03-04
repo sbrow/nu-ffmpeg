@@ -18,8 +18,7 @@ Utility commands for working with ffmpeg in nushell.
 The `ffmpeg` and `ffprobe` commands are required to be installed and available
 in your path; they are not installed for you.
 
-Currently only nushell version 0.89.0
- is supported.
+Currently only nushell version 0.89.0 is supported.
 
 After that, clone this repository and add the following code to your scripts,
 or to your `config.nu` file:
