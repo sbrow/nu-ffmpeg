@@ -25,11 +25,26 @@ export def "cmd to-args" []: record -> list<string> {
 # Serves as a sink for a filter pipeline.
 export def "run" [
   --dry-run (-d) # Print the command that would be run
+  --print-command # Print the command, and then run it.
+  --confirm
 ] {
+  let cmd = $in;
+
   if $dry_run {
-      [ffmpeg, ...($in | cmd to-args)]
+      [ffmpeg, ...($cmd | cmd to-args)]
   } else {
-    ffmpeg ...($in | cmd to-args)
+    if ($print_command) {
+      print -e $"ffmpeg ($cmd | cmd to-args | str join ' ')";
+    }
+    if ($confirm) {
+      let args = ['ffmpeg', ...($cmd | cmd to-args)];
+
+      ['No' 'Yes'] | input list $"Run this command?\n($args | str join ' ')" | if $in == 'Yes' {
+        ffmpeg ...($cmd | cmd to-args)
+      }
+    } else {
+      ffmpeg ...($cmd | cmd to-args)
+    }
   }
 }
 
