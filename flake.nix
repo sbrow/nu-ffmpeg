@@ -17,6 +17,9 @@
           ffmpeg
           gomplate
 
+          hugo
+          yarn
+
           nushellFull
         ];
       };
