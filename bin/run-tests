@@ -1,0 +1,6 @@
+#!/usr/bin/env -S nu -n
+
+# Run all tests for the package
+def main [] {
+	fd _test -x '{}'
+}
