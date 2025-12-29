@@ -182,3 +182,38 @@ use <path-to-repository>/filters *
 
 ### Examples
 
+```nu
+# Re-encode the video to 30fps
+(
+  fmpeg cmd ['https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4'] []
+  | fps 30
+  | ffmpeg run
+)
+
+Would run:
+╭───┬────────────────────────────────────────────────────────────────────────╮
+│ 0 │ ffmpeg                                                                 │
+│ 1 │ -i                                                                     │
+│ 2 │ https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4 │
+│ 3 │ -filter_complex                                                        │
+│ 4 │ fps=fps=30                                                             │
+╰───┴────────────────────────────────────────────────────────────────────────╯
+```
+
+```nu
+# Re-encode the video to 30fps, specifying input and output streams
+(
+  fmpeg cmd ['https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4'] []
+  | filterchain -i ['0'] -o ['video'] { fps 30 }
+  | ffmpeg run
+)
+
+Would run:
+╭───┬────────────────────────────────────────────────────────────────────────╮
+│ 0 │ ffmpeg                                                                 │
+│ 1 │ -i                                                                     │
+│ 2 │ https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4 │
+│ 3 │ -filter_complex                                                        │
+│ 4 │ [0]fps=fps=30[video]                                                   │
+╰───┴────────────────────────────────────────────────────────────────────────╯
+```
