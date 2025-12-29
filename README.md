@@ -204,7 +204,7 @@ Would run:
 # Re-encode the video to 30fps, specifying input and output streams
 (
   fmpeg cmd ['https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4'] []
-  | filterchain -i ['0'] -o ['video'] { fps 30 }
+  | filterchain --input ['0'] --output ['video'] { fps 30 }
   | ffmpeg run
 )
 
