@@ -168,7 +168,6 @@ use <path-to-repository>/filters *
 
 | name    | description                                                                                                                                                                                                                                |
 | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| banner  | Print a banner for Nushell with information about the project                                                                                                                                                                              |
 | crop    | Crop the input video to given dimensions.                                                                                                                                                                                                  |
 | format  | Convert the input video to one of the specified pixel formats. Libavfilter will try to pick one that is suitable as input to the next filter.                                                                                              |
 | fps     | Convert the video to specified constant frame rate by duplicating or dropping frames as necessary.                                                                                                                                         |

@@ -6,7 +6,7 @@ use filters.nu;
 def main [] {
   (
     help commands
-    | where command_type == "custom" and name !~ "p(rompt|wd)|^main$"
+    | where command_type == "custom" and name !~ "banner|p(rompt|wd)|^main$"
     | select name description
     | update description {
       str replace -a "\n" " "
