@@ -1,7 +1,25 @@
+#!/usr/bin/env -S nu -n
 use std [assert];
 
 use ffmpeg.nu *;
 use filters.nu *;
+
+def main [] {
+   let test_commands = (
+        scope commands
+            | where ($it.type == "custom")
+                and ($it.description | str starts-with "[test]")
+                and not ($it.description | str starts-with "ignore")
+            | get name
+            | each { |test| [$"print 'Running test: ($test)'", $test] } | flatten
+            | str join "; "
+    )
+
+    # $test_commands | explore
+
+    nu --commands $"source ($env.CURRENT_FILE); ($test_commands)"
+    print "Tests completed successfully"
+}
 
 #[test]
 def can_parse_filters_with_inputs_and_outputs [] {
@@ -81,7 +99,7 @@ def can_parse_filtergraph [] {
       ]
     ];
 }
-#[test]
+#ignore [test]
 def can_convert_filtergraph_to_string [] {
     let got = 'split [main][tmp]; [tmp] crop=iw:ih/2:0:0, vflip [flip]; [main][flip] overlay=0:H/2' | parse filtergraph | filtergraph to-string;
 

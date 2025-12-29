@@ -80,10 +80,16 @@ export def "parse filterchain" [
 
 export def "parse filter" [
 ]: string -> table<name: string params: table<param: string, value: string>> {
-  parse --regex '^\s*(?:\[(?<input>[^\s]+)\]\s*)?(?<name>[^=\s\[]+)\s*(?:=(?<params>[^\[\s,;]*)\s*)?(?:\[(?<output>[^\s,;]+)\])?' | first | update params {
-    parse --regex `(?:(?<param>[^=]+)=)?(?<value>[^:]+):?`
-  } | update input { split row '][' | where { is-not-empty }
-  } | update output { split row '][' | where { is-not-empty } }
+  (
+    parse --regex '^\s*(?:\[(?<input>[^\s]+)\]\s*)?(?<name>[^=\s\[]+)\s*(?:=(?<params>[^\[\s,;]*)\s*)?(?:\[(?<output>[^\s,;]+)\])?'
+    | first
+    | update params {
+      default '' | parse --regex `(?:(?<param>[^=]+)=)?(?<value>[^:]+):?`
+    }
+    | update params { update param { if ($in == null) { '' } else { $in} } }
+    | update input { default '' | split row '][' | where { is-not-empty } }
+    | update output { default '' | split row '][' | where { is-not-empty } }
+  )
 }
 
 # TODO: Remove export
@@ -171,8 +177,13 @@ export def append-complex-filter [
   --output (-o): list<string> = []
   name: string
   params: record = {}
-] {
-  $in | cmd filters append [
-    (complex-filter --input $input --output $output $name $params)
-  ]
+]: [record -> record, nothing -> record] {
+  let before = $in;
+  let complex_filter = complex-filter --input $input --output $output $name $params;
+
+  if ($before | is-empty) {
+    $complex_filter
+  } else {
+    $before | cmd filters append [$complex_filter]
+  }
 }
