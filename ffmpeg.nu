@@ -101,7 +101,7 @@ def "filterchain to-string" []: table -> string {
   $in | each { filter to-string }| str join ','
 }
 
-def "filter to-string" []: record<input: list<string> name: string params: table<param: string value: string> output: list<string>> -> string {
+def "filter to-string" []: record<input: list<string> name: string params: table<param: string value: any> output: list<string>> -> string {
   $in | update input {
     str join ']['
   } | update output {
@@ -162,7 +162,7 @@ export def complex-filter [
   --output (-o): list<string> = []
   name: string
   params: record = {}
-]: nothing -> record<input: list<string> name: string params: table<param: string, value: string> output: list<string>> {
+]: nothing -> record<input: list<string> name: string params: table<param: string, value: any> output: list<string>> {
   {
     input: $input
     name: $name

@@ -91,8 +91,8 @@ export def format [
   ] {
   (append-complex-filter format {
     pix_fmts: ($pix_fmts | list to-pipe-separated-string)
-    color_spaces: ($color_spaces | list to-pipe-separated-string)
-    color_ranges: ($color_ranges | list to-pipe-separated-string)
+    color_spaces: ($color_spaces | default [] | list to-pipe-separated-string)
+    color_ranges: ($color_ranges | default [] | list to-pipe-separated-string)
   } -i $input -o $output)
 }
 
