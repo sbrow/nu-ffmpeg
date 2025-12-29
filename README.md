@@ -42,25 +42,8 @@ use <path-to-repository>/filters *
 | ffprobe streams video | Retrieve all the video streams from a list of ffprobe outputs    |
 
 
-## FFMpeg
+### Examples
 
-### Supported Filters
-
-| name    | description                                                                                                                                                                                                                                |
-| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| banner  | Print a banner for Nushell with information about the project                                                                                                                                                                              |
-| crop    | Crop the input video to given dimensions.                                                                                                                                                                                                  |
-| format  | Convert the input video to one of the specified pixel formats. Libavfilter will try to pick one that is suitable as input to the next filter.                                                                                              |
-| fps     | Convert the video to specified constant frame rate by duplicating or dropping frames as necessary.                                                                                                                                         |
-| overlay | Overlay one video on top of another.                                                                                                                                                                                                       |
-| settb   | Set the timebase to use for the output frames timestamps. It is mainly useful for testing timebase configuration.                                                                                                                          |
-| split   |                                                                                                                                                                                                                                            |
-| vflip   | Flip the input video vertically.                                                                                                                                                                                                           |
-| vloop   | loop video frames Same as the `loop` filter in ffmpeg, but had to be renamed due to collisions with the [nushell builtin](https://www.nushell.sh/commands/docs/loop.html)                                                                  |
-| xfade   | Apply cross fade from one input video stream to another input video stream. The cross fade is applied for specified duration. Both inputs must be constant frame-rate and have the same resolution, pixel format, frame rate and timebase. |
-
-
-## Examples
 
 ```nu
 # Return a table from ffprobe
@@ -178,3 +161,24 @@ use <path-to-repository>/filters *
 │ height │ 720  │
 ╰────────┴──────╯
 ```
+
+## FFMpeg
+
+### Supported Filters
+
+| name    | description                                                                                                                                                                                                                                |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| banner  | Print a banner for Nushell with information about the project                                                                                                                                                                              |
+| crop    | Crop the input video to given dimensions.                                                                                                                                                                                                  |
+| format  | Convert the input video to one of the specified pixel formats. Libavfilter will try to pick one that is suitable as input to the next filter.                                                                                              |
+| fps     | Convert the video to specified constant frame rate by duplicating or dropping frames as necessary.                                                                                                                                         |
+| overlay | Overlay one video on top of another.                                                                                                                                                                                                       |
+| settb   | Set the timebase to use for the output frames timestamps. It is mainly useful for testing timebase configuration.                                                                                                                          |
+| split   |                                                                                                                                                                                                                                            |
+| vflip   | Flip the input video vertically.                                                                                                                                                                                                           |
+| vloop   | loop video frames Same as the `loop` filter in ffmpeg, but had to be renamed due to collisions with the [nushell builtin](https://www.nushell.sh/commands/docs/loop.html)                                                                  |
+| xfade   | Apply cross fade from one input video stream to another input video stream. The cross fade is applied for specified duration. Both inputs must be constant frame-rate and have the same resolution, pixel format, frame rate and timebase. |
+
+
+### Examples
+
