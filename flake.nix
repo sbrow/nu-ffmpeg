@@ -20,7 +20,7 @@
           hugo
           yarn
 
-          nushellFull
+          nushell
         ];
       };
     };

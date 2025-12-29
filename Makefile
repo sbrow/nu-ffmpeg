@@ -1,4 +1,4 @@
-SHELL:=/nix/store/zicq9x6aznw7x202564p8iy0rm04py6l-nushell-0.89.0/bin/nu 
+SHELL:=/nix/store/kx4ic1nmgsfh3qhr74vxq7g97pal7mn4-nushell-0.108.0/bin/nu
 
 all: README.md
 

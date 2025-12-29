@@ -7,8 +7,8 @@ def main [] {
   (
     help commands
     | where command_type == "custom" and name !~ "p(rompt|wd)|^main$"
-    | select name usage
-    | update usage {
+    | select name description
+    | update description {
       str replace -a "\n" " "
     }
     | to md -p

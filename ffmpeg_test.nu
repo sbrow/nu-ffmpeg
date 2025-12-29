@@ -100,7 +100,7 @@ def boolean_params_are_converted_to_1_or_0 [] {
 
 #[test]
 def without_filterchain_chains_are_concated [] {
-    let got = (cmd ['INPUT'] ['OUTPUT'] | fps 25 | loop 2 1);
+    let got = (cmd ['INPUT'] ['OUTPUT'] | fps 25 | vloop 2 1);
 
     assert equal $got {
         input: ['INPUT']
@@ -140,7 +140,7 @@ def without_filterchain_chains_are_concated [] {
 }
 #[test]
 def filterchain_concats_filters [] {
-    let got = (cmd ['INPUT'] ['OUTPUT'] | filterchain { fps 25 -i ['in'] | loop 2 1 -o ['out']});
+    let got = (cmd ['INPUT'] ['OUTPUT'] | filterchain { fps 25 -i ['in'] | vloop 2 1 -o ['out']});
 
     assert equal $got {
         input: ['INPUT']
@@ -179,7 +179,7 @@ def filterchain_concats_filters [] {
 
 #[test]
 def filterchain_appends_current_filter [] {
-    let got = (cmd ['INPUT'] ['OUTPUT'] | fps 12 | filterchain { fps 25 -i ['in'] | loop 2 1 -o ['out']});
+    let got = (cmd ['INPUT'] ['OUTPUT'] | fps 12 | filterchain { fps 25 -i ['in'] | vloop 2 1 -o ['out']});
 
     assert equal $got {
         input: ['INPUT']

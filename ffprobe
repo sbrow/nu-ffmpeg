@@ -31,6 +31,6 @@ export def "streams audio" []: table<streams: table, format: record> -> table  {
 }
  
 # Get the dimensions of a video stream
-export def "dimensions" []: table<streams: table, format: record> -> record<width: int, height: int> {
+export def "dimensions" []: record<width: int, height: int> -> record<width: int, height: int> {
   $in | select width height
 }

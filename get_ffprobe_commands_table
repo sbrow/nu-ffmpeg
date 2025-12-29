@@ -7,9 +7,9 @@ def main [] {
   (
     help commands
     | where command_type == "custom" and name !~ "p(rompt|wd)"
-    | select name usage
+    | select name description
     | update name { if $in == 'main' { 'ffprobe' } else { $'ffprobe ($in)' } }
-    | filter { not ($in.name == 'ffprobe' and ($in.usage | is-empty)) }
+    | where { not ($in.name == 'ffprobe' and ($in.description | is-empty)) }
     | to md -p
   )
 }

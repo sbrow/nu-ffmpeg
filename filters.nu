@@ -5,9 +5,11 @@ use std [assert];
 use ./ffmpeg.nu ["append-complex-filter"]
 
 # loop video frames
-export def loop [
-  --input (-i): list<string>: = []
-  --output (-o): list<string>: = []
+# Same as the `loop` filter in ffmpeg, but
+# had to be renamed due to collisions with the [nushell builtin](https://www.nushell.sh/commands/docs/loop.html)
+export def "vloop" [
+  --input (-i): list<string> = []
+  --output (-o): list<string> = []
   loop: int # Set the number of loops. Setting this value to -1 will result in infinite loops. Default is 0.
   size: int # Set maximal size in number of frames. Default is 0.
   --start (-s): int # Set first frame of loop. Default is 0.
@@ -23,8 +25,8 @@ export def loop [
 
 # Convert the video to specified constant frame rate by duplicating or dropping frames as necessary.
 export def fps [
-  --input (-i): list<string>: = []
-  --output (-o): list<string>: = []
+  --input (-i): list<string> = []
+  --output (-o): list<string> = []
  --start-time (-s) # Assume the first PTS should be the given value, in seconds.
 # This allows for padding/trimming at the start of stream. By default, no assumption is made about the first frame’s expected PTS, so no padding or trimming is done. For example, this could be set to 0 to pad the beginning with duplicates of the first frame if a video stream starts after the audio stream or to trim any frames with a negative PTS.
   --round (-r): string@fps-round # Timestamp (PTS) rounding method. use completion to view available options.
@@ -63,8 +65,8 @@ def fps-fps [] {
 
 # Set the timebase to use for the output frames timestamps. It is mainly useful for testing timebase configuration.
 export def settb [
-  --input (-i): list<string>: = []
-  --output (-o): list<string>: = []
+  --input (-i): list<string> = []
+  --output (-o): list<string> = []
   timebase # The value for tb is an arithmetic expression representing a rational. The expression can contain the constants "AVTB" (the default timebase), "intb" (the input timebase) and "sr" (the sample rate, audio only). Default value is "intb".
   ] {
   (append-complex-filter settb {expr: $timebase} -i $input -o $output)
@@ -81,8 +83,8 @@ def "list to-pipe-separated-string" []: list -> string {
 
 # Convert the input video to one of the specified pixel formats. Libavfilter will try to pick one that is suitable as input to the next filter.
 export def format [
-  --input (-i): list<string>: = []
-  --output (-o): list<string>: = []
+  --input (-i): list<string> = []
+  --output (-o): list<string> = []
   --pix-fmts (-p): list<string> # A list of pixel format names
   --color-spaces (-c): list<string> # A list of color space names
   --color-ranges (-r): list<string> # A list of color range names
@@ -208,7 +210,7 @@ def xfade-expressions [context: string] {
 }
 
 export def split [
-  --input (-i): list<string>: = []
+  --input (-i): list<string> = []
   output: list<string>
 ] {
     let cmd = $in;

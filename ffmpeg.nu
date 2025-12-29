@@ -82,8 +82,8 @@ export def "parse filter" [
 ]: string -> table<name: string params: table<param: string, value: string>> {
   parse --regex '^\s*(?:\[(?<input>[^\s]+)\]\s*)?(?<name>[^=\s\[]+)\s*(?:=(?<params>[^\[\s,;]*)\s*)?(?:\[(?<output>[^\s,;]+)\])?' | first | update params {
     parse --regex `(?:(?<param>[^=]+)=)?(?<value>[^:]+):?`
-  } | update input { split row '][' | filter { is-not-empty }
-  } | update output { split row '][' | filter { is-not-empty } }
+  } | update input { split row '][' | where { is-not-empty }
+  } | update output { split row '][' | where { is-not-empty } }
 }
 
 # TODO: Remove export
@@ -95,7 +95,7 @@ def "filterchain to-string" []: table -> string {
   $in | each { filter to-string }| str join ','
 }
 
-def "filter to-string" []: record<input: list<string> name: string params: table<name: string value: string> output: list<string>> -> string {
+def "filter to-string" []: record<input: list<string> name: string params: table<param: string value: string> output: list<string>> -> string {
   $in | update input {
     str join ']['
   } | update output {
@@ -175,8 +175,4 @@ export def append-complex-filter [
   $in | cmd filters append [
     (complex-filter --input $input --output $output $name $params)
   ]
-}
-
-def is-not-empty []: any -> bool {
-  is-empty | not $in
 }
