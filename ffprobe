@@ -29,6 +29,11 @@ export def "streams video" []: table<streams: table, format: record> -> table  {
 export def "streams audio" []: table<streams: table, format: record> -> table  {
     $in | streams | where codec_type == "audio"
 }
+
+# Retrieve all the subtitle streams from a list of ffprobe outputs
+export def "streams subtitle" []: table<streams: table, format: record> -> table  {
+    $in | streams | where codec_type == "subtitle"
+}
  
 # Get the dimensions of a video stream
 export def "dimensions" []: record<width: int, height: int> -> record<width: int, height: int> {

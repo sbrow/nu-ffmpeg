@@ -32,14 +32,15 @@ use <path-to-repository>/filters *
 
 ### Commands
 
-| name                  | description                                                      |
-| --------------------- | ---------------------------------------------------------------- |
-| ffprobe banner        | Print a banner for Nushell with information about the project    |
-| ffprobe               | Run ffprobe on a list of files and return the output as a table. |
-| ffprobe dimensions    | Get the dimensions of a video stream                             |
-| ffprobe streams       | Retrieve all the streams from a list of ffprobe outputs          |
-| ffprobe streams audio | Retrieve all the audio streams from a list of ffprobe outputs    |
-| ffprobe streams video | Retrieve all the video streams from a list of ffprobe outputs    |
+| name                     | description                                                      |
+| ---------------------    | ---------------------------------------------------------------- |
+| ffprobe banner           | Print a banner for Nushell with information about the project    |
+| ffprobe                  | Run ffprobe on a list of files and return the output as a table. |
+| ffprobe dimensions       | Get the dimensions of a video stream                             |
+| ffprobe streams          | Retrieve all the streams from a list of ffprobe outputs          |
+| ffprobe streams audio    | Retrieve all the audio streams from a list of ffprobe outputs    |
+| ffprobe streams subtitle | Retrieve all the subtitle streams from a list of ffprobe outputs |
+| ffprobe streams video    | Retrieve all the video streams from a list of ffprobe outputs    |
 
 
 ### Examples
